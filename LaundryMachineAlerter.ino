@@ -9,8 +9,10 @@
 #include <WiFiNINA.h>
 
 // Constants
-const char ssid[] = "SSID HERE";                    // Wifi SSID
-const char pass[] = "WIFI PASSWORD HERE";           // Wifi password
+const char ssid[] = "WiFi Name Here";               // Wifi SSID
+const char pass[] = "WifFi password here";          // Wifi password
+const String key = "key here";                      // Key Here
+const String event = "event name here";             // Event here
 const int statusPin = 13;                           // On board LED
 const int ledPin = 2;                               // External LED
 const int sensorPin = A0;                           // Sensor Pin
@@ -34,9 +36,10 @@ unsigned long alertSentTime = 0;
 void setup() {
   //Initialize serial and wait for port to open:
   Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
+  // Uncomment to have the arduino wait until it establishes a serial connection
+//  while (!Serial) {
+//    ; // wait for serial port to connect. Needed for native USB port only
+//  }
 
   // Set pins
   pinMode(statusPin, OUTPUT);
@@ -117,7 +120,7 @@ void loop() {
     Serial.println("Starting connection to server....");
     if(client.connect(server, 443)){
       Serial.println("connected to server");
-      client.println("POST /trigger/[event name here]/with/key/[key here] HTTP/1.1");
+      client.println("POST /trigger/" + event + "/with/key/" + key + " HTTP/1.1");
       client.println("Host: maker.ifttt.com");
       client.println("Connection: close");
       client.println();
@@ -143,7 +146,7 @@ void loop() {
  */
 bool shouldSendAlert(){
   bool result = false;
-  if(sensorValue > 200 && alertSent == false){
+  if(sensorValue > 150 && alertSent == false){
     result = true;
   }
   return result;
